@@ -10,6 +10,8 @@ using System.Web.Security;
 
 public partial class Login : System.Web.UI.Page
 {
+    SingletonDB db = SingletonDB.getInstance();  
+
     protected void Page_Load(object sender, EventArgs e)
     {
         if (HttpContext.Current.User.Identity.IsAuthenticated) 
@@ -26,30 +28,9 @@ public partial class Login : System.Web.UI.Page
 
     protected void Login1_Authenticate(object sender, AuthenticateEventArgs e)
     {
-        using (MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySQLConnStr"].ConnectionString))
-        {
-            String user = Login1.UserName;
-            String pass = Login1.Password;
+        String user = Login1.UserName;
+        String pass = Login1.Password;
 
-            try
-            {
-                connection.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM user WHERE email = @user", connection);
-                cmd.Parameters.AddWithValue("@user", user);
-                MySqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    if (reader["password"].Equals(pass))
-                    {
-                        FormsAuthentication.RedirectFromLoginPage(Login1.UserName, Login1.RememberMeSet);
-                    }
-                }
-                reader.Close();
-            }
-            catch (Exception ex)
-            {
-                lblError.Text = "An error occured while trying to submit: " + ex.Message;
-            }
-        }
+        db.login(user, pass, lblError, Login1);
     }
 }
