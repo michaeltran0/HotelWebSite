@@ -54,7 +54,7 @@ public class SingletonDB
             using (MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySQLConnStr"].ConnectionString))
             {
                 connection.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT DATE_FORMAT(CheckOut, '%d/%m/%Y') as 'In', DATE_FORMAT(CheckIn, '%d/%m/%Y') as 'Out' FROM booking WHERE roomid = " + roomID, connection);
+                MySqlCommand cmd = new MySqlCommand("SELECT DATE_FORMAT(CheckOut, '%m/%d/%Y') as 'In', DATE_FORMAT(CheckIn, '%m/%d/%Y') as 'Out' FROM booking WHERE roomid = " + roomID, connection);
                 MySqlDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())

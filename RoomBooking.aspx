@@ -60,7 +60,7 @@
                     </td><td class="auto-style1">
                         <asp:TextBox ID="txtCheckIn" runat="server" TextMode="Date"></asp:TextBox>
                     </td><td>
-                        <asp:CompareValidator ID="cvCheckIn" runat="server" ControlToValidate="txtCheckIn" ErrorMessage="Valid date not entered (dd/mm/yyyy)" Operator="DataTypeCheck" Type="Date" ForeColor="Red"></asp:CompareValidator>
+                        <asp:CompareValidator ID="cvCheckIn" runat="server" ControlToValidate="txtCheckIn" ErrorMessage="Valid date not entered (mm/dd/yyyy)" Operator="DataTypeCheck" Type="Date" ForeColor="Red"></asp:CompareValidator>
                     </td><td>
                         <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="txtCheckIn" ErrorMessage="Field is required" ForeColor="Red"></asp:RequiredFieldValidator>
                 </td></tr>
@@ -69,7 +69,7 @@
                     </td><td class="auto-style1">
                         <asp:TextBox ID="txtCheckOut" runat="server" TextMode="Date"></asp:TextBox>
                     </td><td>
-                        <asp:CompareValidator ID="cvCheckOut" runat="server" ControlToValidate="txtCheckOut" ErrorMessage="Valid date not entered (dd/mm/yyyy)" Operator="DataTypeCheck" Type="Date" ForeColor="Red"></asp:CompareValidator>
+                        <asp:CompareValidator ID="cvCheckOut" runat="server" ControlToValidate="txtCheckOut" ErrorMessage="Valid date not entered (mm/dd/yyyy)" Operator="DataTypeCheck" Type="Date" ForeColor="Red"></asp:CompareValidator>
                     </td><td>
                         <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="txtCheckOut" ErrorMessage="Field is required" ForeColor="Red"></asp:RequiredFieldValidator>
                 </td></tr>
