@@ -58,15 +58,15 @@ public partial class RoomBooking : System.Web.UI.Page
     {
         lblResult.Text = "";
         lblError.Text = "";
-        int roomID = Int32.Parse(ddlRooms.SelectedItem.Value);
 
         DateTime checkIn = Convert.ToDateTime(txtCheckIn.Text);
         DateTime checkOut = Convert.ToDateTime(txtCheckOut.Text);
-
+        
         //check if date from is before the date to
         if (checkIn < checkOut)
         {
-            db.insertBooking(checkIn, checkOut, roomID, HttpContext.Current.User.Identity.Name, lblResult, lblError);
+            Booking booking = new Booking(checkIn, checkOut, Int32.Parse(ddlRooms.SelectedItem.Value));
+            db.insertBooking(booking, HttpContext.Current.User.Identity.Name, lblResult, lblError);
             display();
         }
         else
@@ -86,7 +86,8 @@ public partial class RoomBooking : System.Web.UI.Page
         //check if date from is before the date to
         if (checkIn < checkOut)
         {
-            db.searchRooms(checkIn, checkOut, GridView3, lblSearch, lblError);
+            Booking booking = new Booking(checkIn, checkOut);
+            db.searchRooms(booking, GridView3, lblSearch, lblError);
         }
         else
         {

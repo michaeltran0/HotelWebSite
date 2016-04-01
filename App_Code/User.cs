@@ -11,6 +11,13 @@ public class User
 	public User()
 	{
 	}
+
+    public User(string email, string password)
+    {
+        this.email = email;
+        this.password = password;
+    }
+
     public int userid { get; set; }
     public string email { get; set; }
     public string firstName { get; set; }

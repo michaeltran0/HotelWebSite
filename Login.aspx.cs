@@ -28,9 +28,8 @@ public partial class Login : System.Web.UI.Page
 
     protected void Login1_Authenticate(object sender, AuthenticateEventArgs e)
     {
-        String user = Login1.UserName;
-        String pass = Login1.Password;
+        User user = new User(Login1.UserName, Login1.Password);
 
-        db.login(user, pass, lblError, Login1);
+        db.login(user, lblError, Login1);
     }
 }

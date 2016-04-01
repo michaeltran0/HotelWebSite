@@ -12,6 +12,19 @@ public class Booking
 	{
 	}
 
+    public Booking(DateTime checkin, DateTime checkout)
+    {
+        this.checkin = checkin;
+        this.checkout = checkout;
+    }
+
+    public Booking(DateTime checkin, DateTime checkout, int roomid)
+    {
+        this.checkin = checkin;
+        this.checkout = checkout;
+        this.roomid = roomid;
+    }
+
     public int bookingid { get; set; }
     public int userid { get; set; }
     public int roomid { get; set; }

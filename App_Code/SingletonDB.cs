@@ -46,7 +46,7 @@ public class SingletonDB
     }
 
     //insert new booking
-    public void insertBooking(DateTime checkIn, DateTime checkOut, int roomID, String userID, Label result, Label error)
+    public void insertBooking(Booking booking, String userID, Label result, Label error)
     {
         Boolean overlap = false;
         try
@@ -54,13 +54,13 @@ public class SingletonDB
             using (MySqlConnection connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySQLConnStr"].ConnectionString))
             {
                 connection.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT DATE_FORMAT(CheckOut, '%m/%d/%Y') as 'In', DATE_FORMAT(CheckIn, '%m/%d/%Y') as 'Out' FROM booking WHERE roomid = " + roomID, connection);
+                MySqlCommand cmd = new MySqlCommand("SELECT DATE_FORMAT(CheckOut, '%m/%d/%Y') as 'In', DATE_FORMAT(CheckIn, '%m/%d/%Y') as 'Out' FROM booking WHERE roomid = " + booking.roomid, connection);
                 MySqlDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
                     //check if dates overlap with dates already booked
-                    if (checkIn <= Convert.ToDateTime(reader["In"]) && Convert.ToDateTime(reader["Out"]) <= checkOut)
+                    if (booking.checkin <= Convert.ToDateTime(reader["In"]) && Convert.ToDateTime(reader["Out"]) <= booking.checkout)
                     {
                         overlap = true;
                     }
@@ -81,14 +81,13 @@ public class SingletonDB
                 {
                     MySqlCommand insertcmd = connection.CreateCommand();
                     insertcmd.CommandText = "INSERT INTO booking(CheckIn, CheckOut, roomid, userid) Values(@checkIn, @checkOut, @roomid, @userid)";
-                    insertcmd.Parameters.AddWithValue("@checkIn", checkIn.ToString("yyyyMMdd"));
-                    insertcmd.Parameters.AddWithValue("@checkOut", checkOut.ToString("yyyyMMdd"));
-                    insertcmd.Parameters.AddWithValue("@roomid", roomID);
+                    insertcmd.Parameters.AddWithValue("@checkIn", booking.checkin.ToString("yyyy/MM/dd"));
+                    insertcmd.Parameters.AddWithValue("@checkOut", booking.checkout.ToString("yyyy/MM/dd"));
+                    insertcmd.Parameters.AddWithValue("@roomid", booking.roomid);
                     insertcmd.Parameters.AddWithValue("@userid", userID);
                     insertcmd.ExecuteNonQuery();
 
-                    result.Text = "Room was booked sucessfully. FROM:" + checkIn.ToString("yyyy/MM/dd") + " To:" + checkOut.ToString("yyyy/MM/dd");
-
+                    result.Text = "Room was booked sucessfully. FROM:" + booking.checkin.ToString("MM/dd/yyyy") + " To:" + booking.checkout.ToString("MM/dd/yyyy");
                 }
                 else
                 {
@@ -103,7 +102,7 @@ public class SingletonDB
         }
     }
 
-    public void searchRooms(DateTime checkIn, DateTime checkOut, GridView GridView3, Label lblSearch, Label lblError) 
+    public void searchRooms(Booking booking, GridView GridView3, Label lblSearch, Label lblError) 
     {
         try
         {
@@ -114,14 +113,14 @@ public class SingletonDB
                     + " FROM room WHERE room.roomid not in"
                     + " (Select roomid From booking where (booking.CheckIn <= @checkOut) AND (booking.CheckOut >= @checkIn))"
                     + " GROUP BY roomid", connection);
-                cmd.Parameters.AddWithValue("@checkIn", checkIn.ToString("yyyyMMdd"));
-                cmd.Parameters.AddWithValue("@checkOut", checkOut.ToString("yyyyMMdd"));
+                cmd.Parameters.AddWithValue("@checkIn", booking.checkin.ToString("yyyyMMdd"));
+                cmd.Parameters.AddWithValue("@checkOut", booking.checkout.ToString("yyyyMMdd"));
                 DataTable dataTable = new DataTable();
                 MySqlDataAdapter da = new MySqlDataAdapter(cmd);
                 da.Fill(dataTable);
                 GridView3.DataSource = dataTable;
                 GridView3.DataBind();
-                lblSearch.Text = "Rooms available from " + checkIn.ToString("dd/MM/yyyy") + " to " + checkOut.ToString("dd/MM/yyyy") + ".";
+                lblSearch.Text = "Rooms available from " + booking.checkin.ToString("MM/dd/yyyy") + " to " + booking.checkout.ToString("MM/dd/yyyy") + ".";
                 lblSearch.Visible = true;
             }
         }
@@ -131,7 +130,7 @@ public class SingletonDB
         }
     }
 
-    public void login(String user, String pass, Label lblError, Login Login1)
+    public void login(User user, Label lblError, Login Login1)
     {
         try
         {
@@ -139,11 +138,11 @@ public class SingletonDB
             {
                 connection.Open();
                 MySqlCommand cmd = new MySqlCommand("SELECT * FROM user WHERE email = @user", connection);
-                cmd.Parameters.AddWithValue("@user", user);
+                cmd.Parameters.AddWithValue("@user", user.email);
                 MySqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    if (reader["password"].Equals(pass))
+                    if (reader["password"].Equals(user.password))
                     {
                         FormsAuthentication.RedirectFromLoginPage(Login1.UserName, Login1.RememberMeSet);
                     }

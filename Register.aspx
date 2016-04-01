@@ -43,7 +43,7 @@
                     </tr>
                     <tr>
                         <td><asp:Button ID="btnRegister" runat="server" Text="Register" /></td>
-                        <td><asp:Button ID="btnClear" runat="server" Text="Clear" OnClick="btnClear_Click" /></td>
+                        <td><asp:Button ID="btnClear" runat="server" Text="Clear" OnClick="btnClear_Click" CausesValidation="False" /></td>
                     </tr>
                 </table>
             </div>
